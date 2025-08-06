@@ -332,9 +332,11 @@ public class InGameManager : MonoBehaviourPunCallbacks, IPunObservable
     // 캔버스 비활성화를 해야겠음. 
     private void StartCardSelect()
     {
+        
         if (!PhotonNetwork.IsMasterClient) return;
 
         photonView.RPC("RPC_StartCardSelect", RpcTarget.All);
+        
     }
 
     [PunRPC]
@@ -416,7 +418,7 @@ public class InGameManager : MonoBehaviourPunCallbacks, IPunObservable
         else if (alivePlayers.Count == 0)
         {
             // 무승부 - 라운드 재시작
-            StartCoroutine(StartRoundWithDelay());
+            //StartCoroutine(StartRoundWithDelay());
         }
     }
 
