@@ -5,24 +5,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class PlayerDisconnectedPopup : MonoBehaviour
+public class PlayerDisconnectedPopup : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject popupPanel;
 
     [SerializeField] private Button confirmButton;
     
-    private void OnEnable()
-    {
-        InGameManager.OnPlayerDisconnected += ShowDisconnectedPopup;
-    }
-
+ 
     private void OnDisable()
     {
+        Debug.Log("OnDisable");
         InGameManager.OnPlayerDisconnected -= ShowDisconnectedPopup;
     }
 
     private void Awake()
     {
+        InGameManager.OnPlayerDisconnected += ShowDisconnectedPopup;
         confirmButton.onClick.AddListener(OnConfirmClick);
         popupPanel.SetActive(false);
     }
@@ -37,18 +35,15 @@ public class PlayerDisconnectedPopup : MonoBehaviour
 
     void OnConfirmClick()
     {
-        StartCoroutine(DisconnectAndGoToLobby());
+        Debug.Log("OnConfirmClick");
+        Time.timeScale = 1;
+        PhotonNetwork.LeaveRoom();
     }
 
-    private IEnumerator DisconnectAndGoToLobby()
+    public override void OnLeftRoom()
     {
-        PhotonNetwork.Disconnect();
-
-        while (PhotonNetwork.IsConnected)
-        {
-            yield return null;
-        }
-
-        SceneManager.LoadScene("LobbyScene");
+        base.OnLeftRoom();
+        Debug.Log("OnLeftRoom");
+        SceneManager.LoadScene("USW/LobbyScene/LobbyScene");
     }
 }
